@@ -1,0 +1,40 @@
+﻿@page "/"
+@page "/counter"
+
+@using Geo.Svg.Map.Data
+@inject MapService mapService
+
+<h1>Map Clicker</h1>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Draw Map</button>
+<p> </p>
+<p>Clicked Item: @clickedItem</p>
+<svg>
+    <g>
+    @foreach (var item in polygons)
+    {
+        int ref_index = item.ItemNumber;
+        <g @onclick=@(() => SelectItem(ref_index))> @item.SvgGeometry </g>
+    }
+    </g>
+</svg>
+
+
+@code {
+    private PolygonViewModel[] polygons = Array.Empty<PolygonViewModel>();
+    private int currentCount = 0;
+    private int clickedItem = -1;
+
+
+    private void IncrementCount()
+    {
+        polygons = mapService.GetPolygons();
+        currentCount++;
+    }  
+
+    private void SelectItem(int itemNumber)
+    {        
+        clickedItem = itemNumber;
+    }
+
+}
